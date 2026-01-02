@@ -1,0 +1,115 @@
+# generated: 2025-12-14
+# project: constructon
+# project_key: constructon
+# tracking_system: file-system
+# story_location: docs/sprint-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder
+#   - ready-for-dev: Draft approved and story context created
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically drafts next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2025-12-14
+project: constructon
+project_key: constructon
+tracking_system: file-system
+story_location: docs/sprint-artifacts
+
+development_status:
+  # Epic 1: Site Foundation & Homepage
+  epic-1: done
+  1-1-initialize-nextjs-project-with-core-dependencies: done
+  1-2-create-root-layout-with-header-and-footer: done
+  1-3-build-mobile-navigation-with-sheet-component: done
+  1-4-create-homepage-with-hero-section: done
+  epic-1-retrospective: optional
+
+  # Epic 2: Villa Discovery & Showcase
+  epic-2: done
+  2-1-set-up-sanity-cms-with-villa-schema: done
+  2-2-create-sanity-client-and-type-safe-queries: done
+  2-3-create-villa-listing-page-with-villacard-grid: done
+  2-4-create-villa-detail-page-with-specifications: done
+  2-5-build-photo-gallery-with-swipe-support: done
+  2-6-implement-tier-filtering-on-villa-listing: done
+  2-7-add-seo-and-social-sharing-for-villa-pages: done
+  epic-2-retrospective: optional
+
+  # Epic 3: Pricing & Financial Tools
+  epic-3: done
+  3-1-create-formatting-utilities-and-calculator-logic: done
+  3-2-implement-affordabilityprovider-and-useaffordability-hook: done
+  3-3-display-pricing-on-villa-cards-and-detail-pages: done
+  3-4-build-financing-calculator-component: done
+  3-5-create-stickyaffordabilitybar: done
+  3-6-add-monthly-payment-messaging-to-villa-cards: done
+  epic-3-retrospective: optional
+
+  # Epic 4: Lead Capture & Communication
+  epic-4: done
+  4-1-create-whatsapp-url-builder-utility: done
+  4-2-build-whatsapp-button-with-cva-variants: done
+  4-3-add-whatsapp-to-header-and-stickyaffordabilitybar: done
+  4-4-create-contact-page-with-phone-number: done
+  4-5-build-inquiry-form-with-server-action: done
+  4-6-implement-lead-source-attribution: done
+  epic-4-retrospective: optional
+
+  # Epic 5: Trust & Credibility
+  epic-5: done
+  5-1-create-sanity-schemas-for-team-and-testimonials: done
+  5-2-build-about-page-with-company-story: done
+  5-3-create-team-page-with-profile-cards: done
+  5-4-implement-video-introductions-with-lazyvideo: done
+  5-5-build-testimonials-section-with-testimonialcard: done
+  5-6-create-trustbadge-component-and-display: done
+  5-7-build-process-transparency-section: done
+  epic-5-retrospective: optional
+
+  # Epic 6: Content & Resources
+  epic-6: done
+  6-1-create-sanity-schema-for-completed-projects: done
+  6-2-build-completed-projects-gallery: done
+  6-3-create-faq-page-for-first-time-builders: done
+  6-4-build-investment-information-section: done
+  6-5-create-roi-projections-display: done
+  6-6-build-land-partnership-information-page: done
+  6-7-create-smart-home-technology-showcase: done
+  6-8-build-villa-tier-comparison-component: done
+  epic-6-retrospective: optional
+
+  # Epic 7: Analytics & Optimization
+  epic-7: done
+  7-1-create-analytics-utilities-and-event-types: done
+  7-2-implement-google-analytics-4-integration: done
+  7-3-implement-meta-pixel-integration: done
+  7-4-create-analyticsprovider-component: done
+  7-5-track-conversion-events: done
+  7-6-track-villa-engagement-metrics: done
+  7-7-identify-return-visitors: done
+  epic-7-retrospective: optional

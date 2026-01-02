@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>constructon - Design Directions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1E3A5F;
+      --primary-light: #2D5A87;
+      --accent: #C9A227;
+      --accent-light: #E8D5A3;
+      --whatsapp: #25D366;
+      --success: #10B981;
+      --bg: #FAFAFA;
+      --surface: #FFFFFF;
+      --border: #E5E7EB;
+      --text: #1F2937;
+      --text-secondary: #6B7280;
+      --tier-starter: #0D9488;
+      --tier-executive: #1E3A5F;
+      --tier-signature: #C9A227;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      background: var(--primary);
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .nav-tabs button {
+      padding: 12px 24px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: transparent;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-tabs button:hover,
+    .nav-tabs button.active {
+      background: white;
+      color: var(--primary);
+      border-color: white;
+    }
+
+    .direction {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .direction.active {
+      display: block;
+    }
+
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+    /* ========== DIRECTION A: Luxury Editorial ========== */
+    .dir-a .hero {
+      height: 90vh;
+      background: linear-gradient(135deg, var(--primary) 0%, #0f1f33 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 24px;
+      position: relative;
+    }
+
+    .dir-a .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="rgba(255,255,255,0.02)" width="50" height="50"/><rect fill="rgba(255,255,255,0.02)" x="50" y="50" width="50" height="50"/></svg>');
+      background-size: 40px;
+    }
+
+    .dir-a .hero h1 {
+      font-size: 56px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .dir-a .hero p {
+      font-size: 20px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .dir-a .hero .cta-group {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+
+    .dir-a .btn-primary {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 16px 32px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dir-a .btn-secondary {
+      background: transparent;
+      color: white;
+      padding: 16px 32px;
+      border: 2px solid white;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dir-a .section-title {
+      text-align: center;
+      padding: 64px 24px 32px;
+    }
+
+    .dir-a .section-title h2 {
+      font-size: 36px;
+      color: var(--primary);
+    }
+
+    .dir-a .villa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 32px;
+      padding: 0 24px 64px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .dir-a .villa-card {
+      background: white;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .dir-a .villa-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ddd 0%, #eee 100%);
+    }
+
+    .dir-a .villa-card .content {
+      padding: 24px;
+    }
+
+    .dir-a .villa-card .tier {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      border-radius: 2px;
+    }
+
+    .dir-a .tier-starter { background: var(--tier-starter); color: white; }
+    .dir-a .tier-executive { background: var(--tier-executive); color: white; }
+    .dir-a .tier-signature { background: var(--tier-signature); color: var(--primary); }
+
+    .dir-a .villa-card h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .dir-a .villa-card .specs {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .dir-a .villa-card .price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .dir-a .villa-card .monthly {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ========== DIRECTION B: Clean Efficiency ========== */
+    .dir-b .header {
+      background: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 60px;
+      z-index: 50;
+    }
+
+    .dir-b .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .dir-b .header-cta {
+      background: var(--whatsapp);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dir-b .filter-bar {
+      padding: 16px 24px;
+      background: white;
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dir-b .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dir-b .filter-btn:hover,
+    .dir-b .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .dir-b .villa-list {
+      padding: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .dir-b .villa-card {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .dir-b .villa-card img {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ddd 0%, #eee 100%);
+    }
+
+    .dir-b .villa-card .content {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dir-b .villa-card .info h3 {
+      font-size: 18px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .dir-b .villa-card .specs {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .dir-b .villa-card .tier {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .dir-b .villa-card .pricing {
+      text-align: right;
+    }
+
+    .dir-b .villa-card .price {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .dir-b .villa-card .monthly {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .dir-b .sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 12px 24px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dir-b .sticky-bar .payment {
+      font-size: 14px;
+    }
+
+    .dir-b .sticky-bar .payment strong {
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .dir-b .sticky-bar .whatsapp-btn {
+      background: var(--whatsapp);
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* ========== DIRECTION C: Bold Modern ========== */
+    .dir-c {
+      background: var(--primary);
+      color: white;
+    }
+
+    .dir-c .hero {
+      padding: 80px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .dir-c .hero h1 {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .dir-c .hero h1 span {
+      color: var(--accent);
+    }
+
+    .dir-c .hero p {
+      font-size: 20px;
+      opacity: 0.8;
+      max-width: 500px;
+      margin-bottom: 32px;
+    }
+
+    .dir-c .btn-accent {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 18px 36px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    .dir-c .villa-section {
+      background: white;
+      color: var(--text);
+      padding: 64px 24px;
+    }
+
+    .dir-c .villa-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .dir-c .villa-card {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .dir-c .villa-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ddd 0%, #eee 100%);
+      transition: transform 0.3s;
+    }
+
+    .dir-c .villa-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .dir-c .villa-card .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: white;
+    }
+
+    .dir-c .villa-card h3 {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .dir-c .villa-card .price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .dir-c .cta-banner {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .dir-c .cta-banner h2 {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .dir-c .cta-banner .whatsapp-btn {
+      background: var(--whatsapp);
+      color: white;
+      padding: 18px 48px;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 0;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+
+    /* ========== DIRECTION D: Warm Trust ========== */
+    .dir-d {
+      background: #FDF8F3;
+    }
+
+    .dir-d .header {
+      background: white;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .dir-d .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .dir-d nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    .dir-d nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .dir-d .hero {
+      padding: 64px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .dir-d .hero h1 {
+      font-size: 48px;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .dir-d .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .dir-d .hero .trust-badges {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .dir-d .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .dir-d .trust-badge .icon {
+      width: 24px;
+      height: 24px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
+
+    .dir-d .hero-image {
+      background: linear-gradient(135deg, #ddd 0%, #eee 100%);
+      border-radius: 24px;
+      height: 400px;
+      position: relative;
+    }
+
+    .dir-d .hero-image::after {
+      content: 'Featured Villa Image';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .dir-d .btn-warm {
+      background: var(--primary);
+      color: white;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .dir-d .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      padding: 16px 32px;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 12px;
+    }
+
+    .dir-d .tiers-section {
+      padding: 64px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .dir-d .tiers-section h2 {
+      text-align: center;
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 48px;
+    }
+
+    .dir-d .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .dir-d .tier-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .dir-d .tier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+
+    .dir-d .tier-card.featured {
+      border: 2px solid var(--accent);
+      position: relative;
+    }
+
+    .dir-d .tier-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--primary);
+      padding: 4px 16px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .dir-d .tier-card h3 {
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .dir-d .tier-card .price-from {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .dir-d .tier-card .price {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .dir-d .tier-card .features {
+      text-align: left;
+      margin: 24px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .dir-d .tier-card .features li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      list-style: none;
+    }
+
+    .dir-d .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--whatsapp);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      cursor: pointer;
+    }
+
+    /* Comparison section */
+    .comparison {
+      padding: 48px 24px;
+      background: white;
+      margin-top: 32px;
+    }
+
+    .comparison h2 {
+      text-align: center;
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 32px;
+    }
+
+    .comparison table {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    .comparison th, .comparison td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison th {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .comparison td {
+      font-size: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .dir-a .hero h1 { font-size: 36px; }
+      .dir-a .villa-grid { grid-template-columns: 1fr; }
+      .dir-b .villa-card { flex-direction: column; }
+      .dir-b .villa-card img { width: 100%; height: 200px; }
+      .dir-c .hero h1 { font-size: 42px; }
+      .dir-c .villa-grid { grid-template-columns: 1fr; }
+      .dir-d .hero { grid-template-columns: 1fr; }
+      .dir-d .tier-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-tabs">
+    <button class="active" onclick="showDirection('a')">A: Luxury Editorial</button>
+    <button onclick="showDirection('b')">B: Clean Efficiency</button>
+    <button onclick="showDirection('c')">C: Bold Modern</button>
+    <button onclick="showDirection('d')">D: Warm Trust</button>
+  </nav>
+
+  <!-- DIRECTION A: Luxury Editorial -->
+  <div id="dir-a" class="direction dir-a active">
+    <div class="hero">
+      <h1>Build Your Legacy<br>in Zimbabwe</h1>
+      <p>Western-quality smart villas with transparent pricing and complete trust — from foundation to handover.</p>
+      <div class="cta-group">
+        <button class="btn-primary">Explore Villas</button>
+        <button class="btn-secondary">Calculate Payment</button>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <h2>Our Villa Collection</h2>
+    </div>
+
+    <div class="villa-grid">
+      <div class="villa-card">
+        <img alt="Starter Villa">
+        <div class="content">
+          <span class="tier tier-starter">Starter</span>
+          <h3>The Horizon</h3>
+          <p class="specs">3 Bed • 2 Bath • 180m² • Smart Ready</p>
+          <p class="price">$95,000</p>
+          <p class="monthly">From $890/month</p>
+        </div>
+      </div>
+      <div class="villa-card">
+        <img alt="Executive Villa">
+        <div class="content">
+          <span class="tier tier-executive">Executive</span>
+          <h3>The Meridian</h3>
+          <p class="specs">4 Bed • 3 Bath • 280m² • Full Smart Home</p>
+          <p class="price">$185,000</p>
+          <p class="monthly">From $1,650/month</p>
+        </div>
+      </div>
+      <div class="villa-card">
+        <img alt="Signature Villa">
+        <div class="content">
+          <span class="tier tier-signature">Signature</span>
+          <h3>The Pinnacle</h3>
+          <p class="specs">5 Bed • 4 Bath • 420m² • Bespoke Smart</p>
+          <p class="price">$350,000</p>
+          <p class="monthly">From $3,100/month</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTION B: Clean Efficiency -->
+  <div id="dir-b" class="direction dir-b">
+    <div class="header">
+      <div class="logo">constructon</div>
+      <button class="header-cta">💬 WhatsApp Us</button>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active">All Plans</button>
+      <button class="filter-btn">Starter</button>
+      <button class="filter-btn">Executive</button>
+      <button class="filter-btn">Signature</button>
+    </div>
+
+    <div class="villa-list">
+      <div class="villa-card">
+        <img alt="Villa">
+        <div class="content">
+          <div class="info">
+            <h3>The Horizon</h3>
+            <p class="specs">3 Bed • 2 Bath • 180m²</p>
+            <span class="tier tier-starter">Starter</span>
+          </div>
+          <div class="pricing">
+            <p class="price">$95,000</p>
+            <p class="monthly">$890/mo</p>
+          </div>
+        </div>
+      </div>
+      <div class="villa-card">
+        <img alt="Villa">
+        <div class="content">
+          <div class="info">
+            <h3>The Meridian</h3>
+            <p class="specs">4 Bed • 3 Bath • 280m²</p>
+            <span class="tier tier-executive">Executive</span>
+          </div>
+          <div class="pricing">
+            <p class="price">$185,000</p>
+            <p class="monthly">$1,650/mo</p>
+          </div>
+        </div>
+      </div>
+      <div class="villa-card">
+        <img alt="Villa">
+        <div class="content">
+          <div class="info">
+            <h3>The Pinnacle</h3>
+            <p class="specs">5 Bed • 4 Bath • 420m²</p>
+            <span class="tier tier-signature">Signature</span>
+          </div>
+          <div class="pricing">
+            <p class="price">$350,000</p>
+            <p class="monthly">$3,100/mo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-bar">
+      <div class="payment">
+        Your Executive Villa: <strong>$1,100/mo</strong>
+      </div>
+      <button class="whatsapp-btn">💬 WhatsApp Now</button>
+    </div>
+  </div>
+
+  <!-- DIRECTION C: Bold Modern -->
+  <div id="dir-c" class="direction dir-c">
+    <div class="hero">
+      <h1>Modern Living.<br><span>Zimbabwe Built.</span></h1>
+      <p>Smart villas with transparent pricing. No hidden costs. No surprises.</p>
+      <button class="btn-accent">View All Villas</button>
+    </div>
+
+    <div class="villa-section">
+      <div class="villa-grid">
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Horizon</h3>
+            <p class="price">$95,000</p>
+          </div>
+        </div>
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Meridian</h3>
+            <p class="price">$185,000</p>
+          </div>
+        </div>
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Pinnacle</h3>
+            <p class="price">$350,000</p>
+          </div>
+        </div>
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Crest</h3>
+            <p class="price">$145,000</p>
+          </div>
+        </div>
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Summit</h3>
+            <p class="price">$275,000</p>
+          </div>
+        </div>
+        <div class="villa-card">
+          <img alt="Villa">
+          <div class="overlay">
+            <h3>The Vista</h3>
+            <p class="price">$125,000</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-banner">
+      <h2>Ready to Build Your Dream?</h2>
+      <p>Get instant answers on WhatsApp</p>
+      <button class="whatsapp-btn">💬 Start Conversation</button>
+    </div>
+  </div>
+
+  <!-- DIRECTION D: Warm Trust -->
+  <div id="dir-d" class="direction dir-d">
+    <div class="header">
+      <div class="logo">constructon</div>
+      <nav>
+        <a href="#">Villas</a>
+        <a href="#">About Us</a>
+        <a href="#">Our Team</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+
+    <div class="hero">
+      <div>
+        <h1>Your Dream Villa,<br>Built with Trust</h1>
+        <p>We show our prices upfront. We show our team. We show our work. Because trust is built through transparency.</p>
+        <button class="btn-warm">Explore Villas</button>
+        <button class="btn-outline">Meet the Team</button>
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <span class="icon">✓</span>
+            <span>Transparent Pricing</span>
+          </div>
+          <div class="trust-badge">
+            <span class="icon">✓</span>
+            <span>Weekly Updates</span>
+          </div>
+          <div class="trust-badge">
+            <span class="icon">✓</span>
+            <span>Smart Home Ready</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image"></div>
+    </div>
+
+    <div class="tiers-section">
+      <h2>Choose Your Villa Tier</h2>
+      <div class="tier-cards">
+        <div class="tier-card">
+          <h3>Starter Villa</h3>
+          <p class="price-from">From</p>
+          <p class="price">$95,000</p>
+          <ul class="features">
+            <li>3 Bedrooms, 2 Bathrooms</li>
+            <li>180m² living space</li>
+            <li>Smart home ready</li>
+            <li>Modern finishes</li>
+          </ul>
+          <button class="btn-warm" style="width:100%">View Plans</button>
+        </div>
+        <div class="tier-card featured">
+          <h3>Executive Villa</h3>
+          <p class="price-from">From</p>
+          <p class="price">$185,000</p>
+          <ul class="features">
+            <li>4 Bedrooms, 3 Bathrooms</li>
+            <li>280m² living space</li>
+            <li>Full smart home system</li>
+            <li>Premium finishes</li>
+          </ul>
+          <button class="btn-warm" style="width:100%">View Plans</button>
+        </div>
+        <div class="tier-card">
+          <h3>Signature Villa</h3>
+          <p class="price-from">From</p>
+          <p class="price">$350,000</p>
+          <ul class="features">
+            <li>5+ Bedrooms, 4 Bathrooms</li>
+            <li>420m²+ living space</li>
+            <li>Bespoke smart systems</li>
+            <li>Luxury finishes</li>
+          </ul>
+          <button class="btn-warm" style="width:100%">View Plans</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="whatsapp-float">💬</div>
+  </div>
+
+  <!-- Comparison Section -->
+  <div class="comparison">
+    <h2>Design Direction Comparison</h2>
+    <table>
+      <tr>
+        <th>Aspect</th>
+        <th>A: Luxury</th>
+        <th>B: Efficient</th>
+        <th>C: Bold</th>
+        <th>D: Warm</th>
+      </tr>
+      <tr>
+        <td><strong>Hero Style</strong></td>
+        <td>Full-screen dramatic</td>
+        <td>Minimal header</td>
+        <td>Bold typography</td>
+        <td>Split with image</td>
+      </tr>
+      <tr>
+        <td><strong>Card Layout</strong></td>
+        <td>Magazine editorial</td>
+        <td>List view (scannable)</td>
+        <td>Grid with overlays</td>
+        <td>Tier-focused cards</td>
+      </tr>
+      <tr>
+        <td><strong>Typography Feel</strong></td>
+        <td>Serif-heavy luxury</td>
+        <td>Clean sans-serif</td>
+        <td>Large bold statements</td>
+        <td>Balanced warmth</td>
+      </tr>
+      <tr>
+        <td><strong>WhatsApp CTA</strong></td>
+        <td>In content</td>
+        <td>Sticky bottom bar</td>
+        <td>Banner section</td>
+        <td>Floating button</td>
+      </tr>
+      <tr>
+        <td><strong>Best For Persona</strong></td>
+        <td>Chipo (status)</td>
+        <td>All (functional)</td>
+        <td>Young couples</td>
+        <td>Diaspora (trust)</td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    function showDirection(dir) {
+      document.querySelectorAll('.direction').forEach(d => d.classList.remove('active'));
+      document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+      document.getElementById('dir-' + dir).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
