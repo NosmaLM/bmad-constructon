@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMAD Complete Project Documentation - constructon</title>
+  <style>
+    @page {
+      margin: 2cm;
+      size: A4;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #1E3A5F;
+      border-bottom: 3px solid #C9A227;
+      padding-bottom: 10px;
+      page-break-before: auto;
+    }
+    h2 {
+      color: #1E3A5F;
+      border-bottom: 2px solid #0D9488;
+      padding-bottom: 8px;
+      margin-top: 30px;
+    }
+    h3 {
+      color: #2D5A87;
+      margin-top: 25px;
+    }
+    h4 {
+      color: #0D9488;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #1E3A5F;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    code {
+      background-color: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Consolas', monospace;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      border-left: 4px solid #0D9488;
+    }
+    .cover-page {
+      text-align: center;
+      padding: 100px 20px;
+      page-break-after: always;
+    }
+    .cover-page h1 {
+      font-size: 2.5em;
+      border: none;
+      color: #1E3A5F;
+    }
+    .cover-page .subtitle {
+      font-size: 1.5em;
+      color: #0D9488;
+      margin: 20px 0;
+    }
+    .cover-page .meta {
+      margin-top: 50px;
+      color: #666;
+    }
+    .toc {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 30px 0;
+    }
+    .toc h2 {
+      border: none;
+      margin-top: 0;
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .toc li {
+      padding: 5px 0;
+      border-bottom: 1px dotted #ddd;
+    }
+    .toc a {
+      color: #1E3A5F;
+      text-decoration: none;
+    }
+    .part-header {
+      background: linear-gradient(135deg, #1E3A5F, #0D9488);
+      color: white;
+      padding: 30px;
+      margin: 40px -20px 20px -20px;
+      page-break-before: always;
+    }
+    .part-header h1 {
+      color: white;
+      border: none;
+      margin: 0;
+    }
+    .highlight-box {
+      background-color: #fff3cd;
+      border-left: 4px solid #C9A227;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .persona-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      background-color: #fafafa;
+    }
+    .persona-card h4 {
+      margin-top: 0;
+      color: #1E3A5F;
+    }
+    hr {
+      border: none;
+      border-top: 2px solid #eee;
+      margin: 30px 0;
+    }
+    @media print {
+      .part-header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cover-page">
+  <h1>BMAD Complete Project Documentation</h1>
+  <div class="subtitle">constructon - Modern Villa Construction Website</div>
+  <p style="font-size: 1.2em; color: #C9A227;">housevill.com</p>
+  <div class="meta">
+    <p><strong>Project:</strong> constructon</p>
+    <p><strong>Author:</strong> Lmr</p>
+    <p><strong>Date:</strong> December 2025</p>
+    <p><strong>Methodology:</strong> BMAD (Brainstorm, Model, Architect, Develop)</p>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#part1">Part 1: Brainstorming Session Results</a></li>
+    <li><a href="#part2">Part 2: Product Requirements Document (PRD)</a></li>
+    <li><a href="#part3">Part 3: UX Design Specification</a></li>
+    <li><a href="#part4">Part 4: Architecture Decision Document</a></li>
+    <li><a href="#part5">Part 5: Epic & Story Breakdown</a></li>
+  </ul>
+</div>
+
+<div class="part-header" id="part1">
+  <h1>Part 1: Brainstorming Session Results</h1>
+</div>
+
+<p><strong>Session Date:</strong> 2025-12-14<br>
+<strong>Techniques Used:</strong> Role Playing, Cross-Pollination, Six Thinking Hats</p>
+
+<h2>Session Overview</h2>
+
+<p><strong>Topic:</strong> How to attract villa customers in Zimbabwe</p>
+
+<p><strong>Goals:</strong></p>
+<ol>
+  <li>Define a clear, compelling value proposition</li>
+  <li>Identify marketing angles that resonate with the target audience</li>
+  <li>Generate website features that convert visitors to leads</li>
+  <li>Map the complete customer journey from discovery to purchase</li>
+</ol>
+
+<h2>Phase 1: Customer Personas</h2>
+
+<div class="persona-card">
+  <h4>Persona 1: The Diaspora Returner</h4>
+  <ul>
+    <li><strong>Who:</strong> 40s professional, successful abroad (UK, US, SA, Australia)</li>
+    <li><strong>Wants:</strong> Status symbol, "I made it" validation, quality assurance</li>
+    <li><strong>Fears:</strong> Cheap materials, disappearing contractors, overseas scams</li>
+    <li><strong>Core Need:</strong> TRUST + TRANSPARENCY from a distance</li>
+    <li><strong>Marketing Angle:</strong> "Western quality, Zimbabwe built"</li>
+  </ul>
+</div>
+
+<div class="persona-card">
+  <h4>Persona 2: The Local High-Achiever</h4>
+  <ul>
+    <li><strong>Who:</strong> Successful professional/business owner already in Zimbabwe</li>
+    <li><strong>Wants:</strong> Modern designs that stand out locally, trendsetter status</li>
+    <li><strong>Key Differentiator:</strong> Smart home tech (voice control, automation)</li>
+    <li><strong>Marketing Angle:</strong> "The only smart home builder in Zimbabwe"</li>
+  </ul>
+</div>
+
+<div class="persona-card">
+  <h4>Persona 3: The Young Power Couple</h4>
+  <ul>
+    <li><strong>Who:</strong> Late 20s/early 30s professionals, first-time builders</li>
+    <li><strong>Wants:</strong> Affordable BUT stylish starter villa</li>
+    <li><strong>Barriers:</strong> Financing, finding land, trusting the process</li>
+    <li><strong>Marketing Angle:</strong> "Starter Villa" product line</li>
+  </ul>
+</div>
+
+<div class="persona-card">
+  <h4>Persona 4: The Investor</h4>
+  <ul>
+    <li><strong>Who:</strong> Diaspora or local buying for multiple purposes</li>
+    <li><strong>Wants:</strong> Live in + Rental income + Asset appreciation</li>
+    <li><strong>Needs:</strong> Turnkey solutions, property management, ROI proof</li>
+    <li><strong>Marketing Angle:</strong> Position villas as "wealth-building assets"</li>
+  </ul>
+</div>
+
+<h2>Phase 2: Cross-Pollination Ideas</h2>
+
+<table>
+  <tr>
+    <th>Industry</th>
+    <th>Key Steal</th>
+    <th>Impact</th>
+  </tr>
+  <tr>
+    <td>Hospitality</td>
+    <td>Virtual tours + lifestyle imagery</td>
+    <td>Builds desire</td>
+  </tr>
+  <tr>
+    <td>Automotive</td>
+    <td>Configurator + product tiers</td>
+    <td>Makes buying easy</td>
+  </tr>
+  <tr>
+    <td>Real Estate Tech</td>
+    <td>Progress tracker + testimonials</td>
+    <td>Builds trust</td>
+  </tr>
+  <tr>
+    <td>Luxury Goods</td>
+    <td>Exclusivity + community</td>
+    <td>Creates status</td>
+  </tr>
+</table>
+
+<div class="highlight-box">
+  <h3>Value Proposition</h3>
+  <p><strong>"Western-quality smart villas, built in Zimbabwe with complete transparency"</strong></p>
+</div>
+
+<div class="part-header" id="part2">
+  <h1>Part 2: Product Requirements Document</h1>
+</div>
+
+<h2>Executive Summary</h2>
+
+<p><strong>constructon</strong> is a digital platform for a modern villa construction company bringing Western-style architecture and smart home technology to Zimbabwe.</p>
+
+<h3>The Problem We Solve</h3>
+
+<table>
+  <tr>
+    <th>Problem</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>Trust Gap</td>
+    <td>Customers fear being scammed by contractors</td>
+  </tr>
+  <tr>
+    <td>Design Gap</td>
+    <td>No local builder offers modern, Western-style designs</td>
+  </tr>
+  <tr>
+    <td>Technology Gap</td>
+    <td>Smart home features are virtually non-existent locally</td>
+  </tr>
+  <tr>
+    <td>Transparency Gap</td>
+    <td>Most builders hide pricing and provide poor communication</td>
+  </tr>
+</table>
+
+<h3>Target Users</h3>
+
+<table>
+  <tr>
+    <th>Persona</th>
+    <th>Description</th>
+    <th>Primary Need</th>
+  </tr>
+  <tr>
+    <td>Diaspora Returner</td>
+    <td>40s professionals abroad</td>
+    <td>Trust & transparency</td>
+  </tr>
+  <tr>
+    <td>Local High-Achiever</td>
+    <td>Successful professionals</td>
+    <td>Modern design & smart tech</td>
+  </tr>
+  <tr>
+    <td>Young Power Couple</td>
+    <td>First-time builders</td>
+    <td>Affordable stylish starter</td>
+  </tr>
+  <tr>
+    <td>Investor</td>
+    <td>Buyers seeking ROI</td>
+    <td>Turnkey solutions</td>
+  </tr>
+</table>
+
+<h2>Success Criteria</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>3-Month Target</th>
+    <th>12-Month Target</th>
+  </tr>
+  <tr>
+    <td>Leads per month</td>
+    <td>50</td>
+    <td>150+</td>
+  </tr>
+  <tr>
+    <td>Visitor to Lead conversion</td>
+    <td>3%</td>
+    <td>5%</td>
+  </tr>
+  <tr>
+    <td>Monthly visitors</td>
+    <td>1,700+</td>
+    <td>5,000+</td>
+  </tr>
+</table>
+
+<h2>Functional Requirements Summary</h2>
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Count</th>
+    <th>Key Features</th>
+  </tr>
+  <tr>
+    <td>Villa Discovery & Showcase</td>
+    <td>7</td>
+    <td>Gallery, photos, floor plans, filtering</td>
+  </tr>
+  <tr>
+    <td>Pricing & Financial Tools</td>
+    <td>5</td>
+    <td>Pricing display, calculator, promotions</td>
+  </tr>
+  <tr>
+    <td>Lead Capture & Communication</td>
+    <td>6</td>
+    <td>WhatsApp, forms, phone, attribution</td>
+  </tr>
+  <tr>
+    <td>Trust & Credibility</td>
+    <td>7</td>
+    <td>Team profiles, testimonials, badges</td>
+  </tr>
+  <tr>
+    <td>Content & Resources</td>
+    <td>6</td>
+    <td>FAQ, investment info, comparisons</td>
+  </tr>
+  <tr>
+    <td>Site Foundation & SEO</td>
+    <td>6</td>
+    <td>Mobile, accessibility, performance</td>
+  </tr>
+  <tr>
+    <td>Analytics & Tracking</td>
+    <td>4</td>
+    <td>Behavior, conversions, return visitors</td>
+  </tr>
+  <tr>
+    <td><strong>Total</strong></td>
+    <td><strong>41</strong></td>
+    <td></td>
+  </tr>
+</table>
+
+<div class="part-header" id="part3">
+  <h1>Part 3: UX Design Specification</h1>
+</div>
+
+<h2>Core User Experience</h2>
+
+<div class="highlight-box">
+  <h3>Defining Experience</h3>
+  <p><strong>"See it. Afford it. WhatsApp it."</strong></p>
+  <p>Visual desire + Financial possibility + Confident action</p>
+</div>
+
+<h3>Experience Principles</h3>
+<ol>
+  <li><strong>Transparency First</strong> - Show everything, hide nothing</li>
+  <li><strong>Mobile Thumb Zone</strong> - Critical CTAs within thumb reach</li>
+  <li><strong>Visual Before Text</strong> - Imagery leads, copy supports</li>
+  <li><strong>Zero-Friction Contact</strong> - WhatsApp always 1 tap away</li>
+  <li><strong>Speed is Trust</strong> - Sub-3-second loads on 3G</li>
+</ol>
+
+<h2>Visual Design Foundation</h2>
+
+<h3>Color System</h3>
+<table>
+  <tr>
+    <th>Role</th>
+    <th>Color</th>
+    <th>Hex</th>
+  </tr>
+  <tr>
+    <td>Primary</td>
+    <td>Slate Blue</td>
+    <td>#1E3A5F</td>
+  </tr>
+  <tr>
+    <td>Accent</td>
+    <td>Warm Gold</td>
+    <td>#C9A227</td>
+  </tr>
+  <tr>
+    <td>WhatsApp CTA</td>
+    <td>Green</td>
+    <td>#25D366</td>
+  </tr>
+  <tr>
+    <td>Starter Tier</td>
+    <td>Teal</td>
+    <td>#0D9488</td>
+  </tr>
+  <tr>
+    <td>Executive Tier</td>
+    <td>Slate Blue</td>
+    <td>#1E3A5F</td>
+  </tr>
+  <tr>
+    <td>Signature Tier</td>
+    <td>Gold</td>
+    <td>#C9A227</td>
+  </tr>
+</table>
+
+<h2>Custom Components</h2>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Purpose</th>
+  </tr>
+  <tr>
+    <td>VillaCard</td>
+    <td>Display villa in list/grid</td>
+  </tr>
+  <tr>
+    <td>TierBadge</td>
+    <td>Visual tier indicator</td>
+  </tr>
+  <tr>
+    <td>FinancingCalculator</td>
+    <td>Affordability calculation</td>
+  </tr>
+  <tr>
+    <td>StickyAffordabilityBar</td>
+    <td>Persistent conversion CTA</td>
+  </tr>
+  <tr>
+    <td>TrustBadge</td>
+    <td>Credibility signals</td>
+  </tr>
+  <tr>
+    <td>PhotoGallery</td>
+    <td>Villa imagery with swipe</td>
+  </tr>
+  <tr>
+    <td>WhatsAppButton</td>
+    <td>Primary contact CTA</td>
+  </tr>
+  <tr>
+    <td>TeamProfileCard</td>
+    <td>Team member display</td>
+  </tr>
+</table>
+
+<div class="part-header" id="part4">
+  <h1>Part 4: Architecture Decision Document</h1>
+</div>
+
+<h2>Technology Stack</h2>
+
+<table>
+  <tr>
+    <th>Layer</th>
+    <th>Choice</th>
+    <th>Rationale</th>
+  </tr>
+  <tr>
+    <td>Framework</td>
+    <td>Next.js 16</td>
+    <td>SSR + static generation</td>
+  </tr>
+  <tr>
+    <td>Language</td>
+    <td>TypeScript 5.x</td>
+    <td>Type safety</td>
+  </tr>
+  <tr>
+    <td>Styling</td>
+    <td>Tailwind CSS + shadcn/ui</td>
+    <td>Mobile-first, accessible</td>
+  </tr>
+  <tr>
+    <td>CMS</td>
+    <td>Sanity</td>
+    <td>Free tier, excellent images</td>
+  </tr>
+  <tr>
+    <td>Hosting</td>
+    <td>Vercel</td>
+    <td>Edge CDN, auto-scaling</td>
+  </tr>
+  <tr>
+    <td>Analytics</td>
+    <td>GA4 + Meta Pixel</td>
+    <td>Conversion tracking</td>
+  </tr>
+</table>
+
+<h2>Project Structure</h2>
+
+<pre>
+src/
+├── app/                 # Next.js App Router pages
+├── components/
+│   ├── ui/              # shadcn components
+│   ├── villa/           # Villa-specific
+│   ├── calculator/      # Calculator components
+│   ├── trust/           # Trust components
+│   ├── contact/         # Contact components
+│   └── layout/          # Layout components
+├── lib/
+│   ├── sanity/          # CMS integration
+│   ├── utils.ts         # Utilities
+│   └── whatsapp.ts      # WhatsApp URL builder
+├── hooks/               # Custom hooks
+├── actions/             # Server Actions
+└── providers/           # Context providers
+</pre>
+
+<h2>Requirements Coverage</h2>
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Covered</th>
+    <th>Status</th>
+  </tr>
+  <tr>
+    <td>Villa Discovery</td>
+    <td>7/7</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Pricing & Financial</td>
+    <td>5/5</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Lead Capture</td>
+    <td>6/6</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Trust & Credibility</td>
+    <td>7/7</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Content & Resources</td>
+    <td>6/6</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Site Foundation & SEO</td>
+    <td>6/6</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td>Analytics & Tracking</td>
+    <td>4/4</td>
+    <td>Complete</td>
+  </tr>
+  <tr>
+    <td><strong>Total</strong></td>
+    <td><strong>41/41</strong></td>
+    <td><strong>100%</strong></td>
+  </tr>
+</table>
+
+<div class="part-header" id="part5">
+  <h1>Part 5: Epic & Story Breakdown</h1>
+</div>
+
+<h2>Epic Overview</h2>
+
+<table>
+  <tr>
+    <th>Epic</th>
+    <th>Description</th>
+    <th>FRs</th>
+    <th>Stories</th>
+  </tr>
+  <tr>
+    <td>Epic 1</td>
+    <td>Site Foundation & Homepage</td>
+    <td>4</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Epic 2</td>
+    <td>Villa Discovery & Showcase</td>
+    <td>8</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>Epic 3</td>
+    <td>Pricing & Financial Tools</td>
+    <td>5</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>Epic 4</td>
+    <td>Lead Capture & Communication</td>
+    <td>6</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>Epic 5</td>
+    <td>Trust & Credibility</td>
+    <td>7</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>Epic 6</td>
+    <td>Content & Resources</td>
+    <td>7</td>
+    <td>8</td>
+  </tr>
+  <tr>
+    <td>Epic 7</td>
+    <td>Analytics & Optimization</td>
+    <td>4</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td><strong>Total</strong></td>
+    <td></td>
+    <td><strong>41</strong></td>
+    <td><strong>45</strong></td>
+  </tr>
+</table>
+
+<h2>Epic Details</h2>
+
+<h3>Epic 1: Site Foundation & Homepage</h3>
+<ul>
+  <li>1.1: Initialize Next.js Project</li>
+  <li>1.2: Create Root Layout with Header/Footer</li>
+  <li>1.3: Build Mobile Navigation</li>
+  <li>1.4: Create Homepage with Hero Section</li>
+</ul>
+
+<h3>Epic 2: Villa Discovery & Showcase</h3>
+<ul>
+  <li>2.1: Set Up Sanity CMS with Villa Schema</li>
+  <li>2.2: Create Sanity Client and Type-Safe Queries</li>
+  <li>2.3: Create Villa Listing Page</li>
+  <li>2.4: Create Villa Detail Page</li>
+  <li>2.5: Build Photo Gallery with Swipe Support</li>
+  <li>2.6: Implement Tier Filtering</li>
+  <li>2.7: Add SEO and Social Sharing</li>
+</ul>
+
+<h3>Epic 3: Pricing & Financial Tools</h3>
+<ul>
+  <li>3.1: Create Formatting Utilities and Calculator Logic</li>
+  <li>3.2: Implement AffordabilityProvider</li>
+  <li>3.3: Display Pricing on Cards and Detail Pages</li>
+  <li>3.4: Build Financing Calculator</li>
+  <li>3.5: Create StickyAffordabilityBar</li>
+  <li>3.6: Add Monthly Payment Messaging</li>
+</ul>
+
+<h3>Epic 4: Lead Capture & Communication</h3>
+<ul>
+  <li>4.1: Create WhatsApp URL Builder</li>
+  <li>4.2: Build WhatsApp Button with CVA Variants</li>
+  <li>4.3: Add WhatsApp to Header and StickyBar</li>
+  <li>4.4: Create Contact Page</li>
+  <li>4.5: Build Inquiry Form with Server Action</li>
+  <li>4.6: Implement Lead Source Attribution</li>
+</ul>
+
+<h3>Epic 5: Trust & Credibility</h3>
+<ul>
+  <li>5.1: Create Sanity Schemas for Team/Testimonials</li>
+  <li>5.2: Build About Page</li>
+  <li>5.3: Create Team Page with Profile Cards</li>
+  <li>5.4: Implement Video Introductions</li>
+  <li>5.5: Build Testimonials Section</li>
+  <li>5.6: Create TrustBadge Component</li>
+  <li>5.7: Build Process Transparency Section</li>
+</ul>
+
+<h3>Epic 6: Content & Resources</h3>
+<ul>
+  <li>6.1: Create Completed Projects Schema</li>
+  <li>6.2: Build Completed Projects Gallery</li>
+  <li>6.3: Create FAQ Page</li>
+  <li>6.4: Build Investment Information Section</li>
+  <li>6.5: Create ROI Projections Display</li>
+  <li>6.6: Build Land Partnership Information</li>
+  <li>6.7: Create Smart Home Showcase</li>
+  <li>6.8: Build Villa Tier Comparison</li>
+</ul>
+
+<h3>Epic 7: Analytics & Optimization</h3>
+<ul>
+  <li>7.1: Create Analytics Utilities</li>
+  <li>7.2: Implement GA4 Integration</li>
+  <li>7.3: Implement Meta Pixel Integration</li>
+  <li>7.4: Create AnalyticsProvider</li>
+  <li>7.5: Track Conversion Events</li>
+  <li>7.6: Track Villa Engagement Metrics</li>
+  <li>7.7: Identify Return Visitors</li>
+</ul>
+
+<hr>
+
+<h2>Document Summary</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Count</th>
+  </tr>
+  <tr>
+    <td>Functional Requirements</td>
+    <td>41</td>
+  </tr>
+  <tr>
+    <td>Non-Functional Requirements</td>
+    <td>32</td>
+  </tr>
+  <tr>
+    <td>Total Requirements</td>
+    <td>73</td>
+  </tr>
+  <tr>
+    <td>Epics</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>User Stories</td>
+    <td>45</td>
+  </tr>
+  <tr>
+    <td>Customer Personas</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Custom Components</td>
+    <td>8</td>
+  </tr>
+</table>
+
+<hr>
+
+<p style="text-align: center; color: #666;">
+  <strong>Document Version:</strong> 1.0<br>
+  <strong>Generated:</strong> January 2025<br>
+  <strong>Project:</strong> constructon - housevill.com<br>
+  <strong>Methodology:</strong> BMAD
+</p>
+
+</body>
+</html>
