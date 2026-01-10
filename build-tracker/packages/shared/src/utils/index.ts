@@ -127,11 +127,11 @@ export function isAllowedFileType(
 ): boolean {
   switch (category) {
     case 'image':
-      return FILE_LIMITS.ALLOWED_IMAGE_TYPES.includes(mimeType);
+      return (FILE_LIMITS.ALLOWED_IMAGE_TYPES as readonly string[]).includes(mimeType);
     case 'video':
-      return FILE_LIMITS.ALLOWED_VIDEO_TYPES.includes(mimeType);
+      return (FILE_LIMITS.ALLOWED_VIDEO_TYPES as readonly string[]).includes(mimeType);
     case 'document':
-      return FILE_LIMITS.ALLOWED_DOCUMENT_TYPES.includes(mimeType);
+      return (FILE_LIMITS.ALLOWED_DOCUMENT_TYPES as readonly string[]).includes(mimeType);
     default:
       return false;
   }
