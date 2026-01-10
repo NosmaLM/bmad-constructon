@@ -2,9 +2,10 @@
  * Updates/Notifications Screen
  */
 
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+
 import { useTheme } from '@/hooks/useTheme';
 import { api } from '@/services/api';
 

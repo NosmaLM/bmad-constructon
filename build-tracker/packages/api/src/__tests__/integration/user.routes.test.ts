@@ -2,8 +2,9 @@
  * User Routes Integration Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { createTestApp, createMockPrisma, testUsers, generateToken } from './testApp';
 
 describe('User Routes Integration', () => {

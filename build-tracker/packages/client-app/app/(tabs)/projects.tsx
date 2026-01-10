@@ -2,17 +2,18 @@
  * Projects List Screen
  */
 
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+
 import { useTheme } from '@/hooks/useTheme';
 import { api } from '@/services/api';
 
 export default function ProjectsScreen() {
   const { theme } = useTheme();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: _isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
       const response = await api.get('/projects');

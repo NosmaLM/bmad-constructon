@@ -2,16 +2,16 @@
  * Root Layout - Build Tracker Client App
  */
 
-import { useEffect } from 'react';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import * as SplashScreen from 'expo-splash-screen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useAuthStore } from '@/stores/auth';
 import { ThemeProvider } from '@/hooks/useTheme';
+import { useAuthStore } from '@/stores/auth';
 
 // Keep splash screen visible while loading
 SplashScreen.preventAutoHideAsync();

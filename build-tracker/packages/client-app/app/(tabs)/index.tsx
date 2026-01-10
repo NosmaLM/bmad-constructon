@@ -2,12 +2,13 @@
  * Dashboard Screen
  */
 
-import { View, Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
-import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useState, useCallback } from 'react';
+import { View, Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
+
 import { useTheme } from '@/hooks/useTheme';
-import { useAuthStore } from '@/stores/auth';
 import { api } from '@/services/api';
+import { useAuthStore } from '@/stores/auth';
 
 export default function DashboardScreen() {
   const { theme } = useTheme();

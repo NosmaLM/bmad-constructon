@@ -2,7 +2,7 @@
  * Theme Hook and Provider
  */
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 // Brand colors from wireframes

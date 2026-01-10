@@ -3,6 +3,7 @@
  */
 
 import winston from 'winston';
+
 import config from '../config';
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;

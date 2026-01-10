@@ -3,8 +3,9 @@
  */
 
 import { Request, Response } from 'express';
-import { vi } from 'vitest';
 import jwt from 'jsonwebtoken';
+import { vi } from 'vitest';
+
 import { AuthRequest } from '../middleware';
 
 // Test user data

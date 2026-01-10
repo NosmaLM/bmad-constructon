@@ -2,10 +2,11 @@
  * User Controller
  */
 
+import { ERROR_CODES, sanitizePagination } from '@build-tracker/shared';
 import { Response, NextFunction } from 'express';
+
 import { AuthRequest, ApiError } from '../middleware';
 import prisma from '../utils/prisma';
-import { ERROR_CODES, sanitizePagination } from '@build-tracker/shared';
 
 export class UserController {
   /**

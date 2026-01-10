@@ -2,13 +2,14 @@
  * Authentication Middleware
  */
 
+import { ERROR_CODES } from '@build-tracker/shared';
+import { UserRole } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserRole } from '@prisma/client';
+
 import config from '../config';
-import prisma from '../utils/prisma';
 import { ApiError } from './errorHandler';
-import { ERROR_CODES } from '@build-tracker/shared';
+import prisma from '../utils/prisma';
 
 export interface AuthUser {
   id: string;

@@ -2,8 +2,9 @@
  * Auth Controller Tests
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import bcrypt from 'bcryptjs';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { AuthController } from '../../controllers/auth.controller';
 import prisma from '../../utils/prisma';
 import {

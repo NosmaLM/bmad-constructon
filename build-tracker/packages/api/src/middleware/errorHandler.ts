@@ -2,12 +2,13 @@
  * Error Handler Middleware
  */
 
+import { ERROR_CODES } from '@build-tracker/shared';
+import { Prisma } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { Prisma } from '@prisma/client';
-import { ERROR_CODES } from '@build-tracker/shared';
-import logger from '../utils/logger';
+
 import config from '../config';
+import logger from '../utils/logger';
 
 export class ApiError extends Error {
   statusCode: number;

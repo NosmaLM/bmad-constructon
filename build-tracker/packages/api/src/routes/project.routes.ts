@@ -3,6 +3,7 @@
  */
 
 import { Router } from 'express';
+
 import { ProjectController } from '../controllers/project.controller';
 import { authenticate, requireManager } from '../middleware';
 

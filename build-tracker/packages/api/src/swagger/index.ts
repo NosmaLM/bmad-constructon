@@ -1,7 +1,8 @@
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
+
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yaml';
 
 const openApiPath = path.join(__dirname, 'openapi.yaml');
 const openApiDocument = YAML.parse(fs.readFileSync(openApiPath, 'utf8'));

@@ -2,10 +2,12 @@
  * Authentication Store
  */
 
-import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
-import { api } from '@/services/api';
 import type { User, AuthTokens } from '@build-tracker/shared';
+import * as SecureStore from 'expo-secure-store';
+import { create } from 'zustand';
+
+import { api } from '@/services/api';
+
 
 interface AuthState {
   user: User | null;

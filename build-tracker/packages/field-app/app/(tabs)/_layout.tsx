@@ -2,8 +2,8 @@
  * Tab Navigation Layout - Field App
  */
 
-import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 const NAVY = '#1E3A5F';
 const GRAY = '#9CA3AF';

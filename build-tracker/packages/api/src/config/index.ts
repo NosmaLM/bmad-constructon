@@ -2,8 +2,9 @@
  * Application Configuration
  */
 
-import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
+
+import { config as dotenvConfig } from 'dotenv';
 
 // Load environment variables
 dotenvConfig({ path: resolve(__dirname, '../../../../.env') });

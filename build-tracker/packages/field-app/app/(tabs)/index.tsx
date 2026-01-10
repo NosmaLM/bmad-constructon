@@ -2,8 +2,8 @@
  * Today Screen - Field App Dashboard
  */
 
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 const NAVY = '#1E3A5F';
 const GOLD = '#C9A227';

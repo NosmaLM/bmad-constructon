@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { UserController } from '../../controllers/user.controller';
 import prisma from '../../utils/prisma';
 import {

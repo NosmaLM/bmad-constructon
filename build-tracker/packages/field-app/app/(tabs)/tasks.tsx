@@ -2,8 +2,8 @@
  * Tasks Screen - Field App
  */
 
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 const NAVY = '#1E3A5F';
 

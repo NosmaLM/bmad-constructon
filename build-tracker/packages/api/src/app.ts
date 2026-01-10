@@ -2,18 +2,18 @@
  * Express Application Setup
  */
 
-import express, { Application } from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
 import compression from 'compression';
-import morgan from 'morgan';
+import cors from 'cors';
+import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
 import config from './config';
-import logger from './utils/logger';
 import { errorHandler, notFoundHandler } from './middleware';
 import routes from './routes';
 import { swaggerServe, swaggerSetup, openApiDocument } from './swagger';
+import logger from './utils/logger';
 
 const app: Application = express();
 

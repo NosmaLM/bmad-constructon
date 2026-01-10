@@ -2,15 +2,17 @@
  * Authentication Controller
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { ERROR_CODES } from '@build-tracker/shared';
 import bcrypt from 'bcryptjs';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import prisma from '../utils/prisma';
+
 import config from '../config';
 import { ApiError, AuthRequest } from '../middleware';
-import { ERROR_CODES } from '@build-tracker/shared';
+import prisma from '../utils/prisma';
+
 
 // Validation schemas
 const registerSchema = z.object({
@@ -280,7 +282,7 @@ export class AuthController {
    */
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email } = req.body;
+      const { email: _email } = req.body;
 
       // Always return success to prevent email enumeration
       // In production, send email with reset link
@@ -300,7 +302,7 @@ export class AuthController {
    */
   resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { token, newPassword } = req.body;
+      const { token: _token, newPassword: _newPassword } = req.body;
 
       // TODO: Implement password reset with token validation
 
@@ -319,7 +321,7 @@ export class AuthController {
    */
   verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { token } = req.body;
+      const { token: _token } = req.body;
 
       // TODO: Implement email verification
 

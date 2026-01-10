@@ -4,8 +4,8 @@
  */
 
 import express, { Application, Request, Response, NextFunction } from 'express';
-import { vi } from 'vitest';
 import jwt from 'jsonwebtoken';
+import { vi } from 'vitest';
 
 // Test JWT secret
 export const TEST_JWT_SECRET = 'test-jwt-secret-key-for-testing-purposes';
@@ -509,7 +509,7 @@ export function createTestApp(mockPrisma: ReturnType<typeof createMockPrisma>): 
   });
 
   // Error handler
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     res.status(err.statusCode || 500).json({
       success: false,
       error: { code: err.code || 'INTERNAL_ERROR', message: err.message },

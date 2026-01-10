@@ -3,6 +3,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+
 import config from '../config';
 import logger from './logger';
 

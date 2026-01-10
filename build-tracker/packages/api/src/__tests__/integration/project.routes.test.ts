@@ -2,8 +2,9 @@
  * Project Routes Integration Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { createTestApp, createMockPrisma, testUsers, testProjects, generateToken } from './testApp';
 
 describe('Project Routes Integration', () => {

@@ -2,8 +2,9 @@
  * Tab Navigation Layout
  */
 
-import { Redirect, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Redirect, Tabs } from 'expo-router';
+
 import { useTheme } from '@/hooks/useTheme';
 import { useAuthStore } from '@/stores/auth';
 

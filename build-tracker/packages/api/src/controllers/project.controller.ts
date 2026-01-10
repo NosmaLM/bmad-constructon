@@ -2,11 +2,12 @@
  * Project Controller
  */
 
-import { Response, NextFunction } from 'express';
-import { AuthRequest, ApiError } from '../middleware';
-import prisma from '../utils/prisma';
 import { ERROR_CODES, sanitizePagination } from '@build-tracker/shared';
 import { UserRole } from '@prisma/client';
+import { Response, NextFunction } from 'express';
+
+import { AuthRequest, ApiError } from '../middleware';
+import prisma from '../utils/prisma';
 
 export class ProjectController {
   /**

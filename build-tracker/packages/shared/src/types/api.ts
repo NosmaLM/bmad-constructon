@@ -3,7 +3,7 @@
  * Request/Response types for REST API
  */
 
-import { User, Project, Task, Payment, Issue, Message, Media } from './entities';
+import { User, Project } from './entities';
 import { UserRole, ProjectStatus, TaskStatus, PaymentStatus } from './enums';
 
 // Generic API Response
