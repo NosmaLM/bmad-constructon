@@ -3,8 +3,11 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
+import { Image } from 'expo-image';
 import { useState, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, RefreshControl, Dimensions } from 'react-native';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 import { useTheme } from '@/hooks/useTheme';
 import { api } from '@/services/api';
@@ -36,6 +39,20 @@ export default function DashboardScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      {/* Hero Banner */}
+      <View style={styles.heroBanner}>
+        <Image
+          source={{ uri: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80' }}
+          style={styles.heroImage}
+          contentFit="cover"
+          transition={300}
+        />
+        <View style={styles.heroOverlay}>
+          <Text style={styles.heroTitle}>Build Your Dream Villa</Text>
+          <Text style={styles.heroSubtitle}>Track progress in real-time</Text>
+        </View>
+      </View>
+
       {/* Welcome Section */}
       <View style={styles.welcomeSection}>
         <Text style={[styles.greeting, { color: theme.colors.textSecondary }]}>
@@ -146,6 +163,33 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  heroBanner: {
+    width: screenWidth,
+    height: 200,
+    position: 'relative',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: 'rgba(30, 58, 95, 0.7)',
+  },
+  heroTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  heroSubtitle: {
+    fontSize: 14,
+    color: '#C9A227',
+    marginTop: 4,
   },
   welcomeSection: {
     padding: 24,

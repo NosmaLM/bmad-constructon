@@ -3,7 +3,10 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const NAVY = '#1E3A5F';
 const GOLD = '#C9A227';
@@ -12,6 +15,20 @@ const SUCCESS = '#10B981';
 export default function TodayScreen() {
   return (
     <ScrollView style={styles.container}>
+      {/* Hero Banner */}
+      <View style={styles.heroBanner}>
+        <Image
+          source={{ uri: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80' }}
+          style={styles.heroImage}
+          contentFit="cover"
+          transition={300}
+        />
+        <View style={styles.heroOverlay}>
+          <Text style={styles.heroTitle}>Field Operations</Text>
+          <Text style={styles.heroSubtitle}>Building excellence on-site</Text>
+        </View>
+      </View>
+
       {/* Site Info */}
       <View style={styles.siteCard}>
         <Text style={styles.siteName}>Villa Project - Plot 15</Text>
@@ -88,6 +105,33 @@ export default function TodayScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F3F4F6' },
+  heroBanner: {
+    width: screenWidth,
+    height: 180,
+    position: 'relative',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    backgroundColor: 'rgba(30, 58, 95, 0.75)',
+  },
+  heroTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  heroSubtitle: {
+    fontSize: 13,
+    color: GOLD,
+    marginTop: 2,
+  },
   siteCard: {
     backgroundColor: NAVY,
     padding: 20,
