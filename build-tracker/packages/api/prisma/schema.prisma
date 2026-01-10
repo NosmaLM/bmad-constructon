@@ -1,0 +1,612 @@
+// Build Tracker Database Schema
+// PostgreSQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserRole {
+  CLIENT
+  PROJECT_MANAGER
+  SITE_SUPERVISOR
+  CONTRACTOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ProjectStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum PhaseStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  DELAYED
+  BLOCKED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  COMPLETED
+  BLOCKED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  MOBILE_MONEY
+  CARD
+  CASH
+  CRYPTO
+}
+
+enum Currency {
+  USD
+  ZWL
+  ZAR
+  GBP
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  FLOOR_PLAN
+  DRONE_FOOTAGE
+  THREE_D_RENDER
+}
+
+enum IssueType {
+  DEFECT
+  DELAY
+  SAFETY
+  MATERIAL
+  WEATHER
+  OTHER
+}
+
+enum IssueSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum NotificationType {
+  PROJECT_UPDATE
+  MILESTONE_REACHED
+  PAYMENT_DUE
+  PAYMENT_RECEIVED
+  ISSUE_REPORTED
+  ISSUE_RESOLVED
+  DOCUMENT_UPLOADED
+  MESSAGE_RECEIVED
+  TASK_ASSIGNED
+  TASK_COMPLETED
+  WEATHER_ALERT
+}
+
+enum DeviceType {
+  CAMERA
+  SENSOR
+  DRONE
+  SMART_LOCK
+  THERMOSTAT
+  LIGHTING
+  ALARM
+}
+
+enum DeviceStatus {
+  ONLINE
+  OFFLINE
+  ERROR
+  MAINTENANCE
+}
+
+enum ContractorSpecialty {
+  GENERAL
+  ELECTRICAL
+  PLUMBING
+  HVAC
+  ROOFING
+  FLOORING
+  PAINTING
+  LANDSCAPING
+  MASONRY
+  CARPENTRY
+  SMART_HOME
+  SOLAR
+  SECURITY
+}
+
+// =============================================================================
+// MODELS
+// =============================================================================
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  phoneNumber     String?
+  firstName       String
+  lastName        String
+  avatarUrl       String?
+  role            UserRole  @default(CLIENT)
+  isActive        Boolean   @default(true)
+  isEmailVerified Boolean   @default(false)
+  isPhoneVerified Boolean   @default(false)
+  lastLoginAt     DateTime?
+  timezone        String    @default("Africa/Harare")
+  locale          String    @default("en")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  profile             UserProfile?
+  clientProjects      Project[]       @relation("ClientProjects")
+  managedProjects     Project[]       @relation("ManagedProjects")
+  assignedTasks       Task[]          @relation("AssignedTasks")
+  reportedIssues      Issue[]         @relation("ReportedIssues")
+  assignedIssues      Issue[]         @relation("AssignedIssues")
+  notifications       Notification[]
+  messages            Message[]
+  uploadedMedia       Media[]
+  dailyReports        DailyReport[]
+  refreshTokens       RefreshToken[]
+  pushTokens          PushToken[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  bio         String?
+  company     String?
+  jobTitle    String?
+  address     String?
+  city        String?
+  country     String?
+  preferences Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+model PushToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String
+  platform  String
+  deviceId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, token])
+  @@map("push_tokens")
+}
+
+model VillaTemplate {
+  id            String   @id @default(uuid())
+  name          String
+  code          String   @unique
+  description   String?
+  bedrooms      Int
+  bathrooms     Int
+  squareMeters  Float
+  basePrice     Decimal  @db.Decimal(12, 2)
+  features      String[]
+  floorPlanUrl  String?
+  renderUrls    String[]
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  projects Project[]
+
+  @@map("villa_templates")
+}
+
+model Project {
+  id                 String        @id @default(uuid())
+  name               String
+  description        String?
+  clientId           String
+  projectManagerId   String?
+  villaTemplateId    String?
+  plotNumber         String?
+  plotAddress        String
+  plotSize           Float?
+  status             ProjectStatus @default(DRAFT)
+  startDate          DateTime?
+  estimatedEndDate   DateTime?
+  actualEndDate      DateTime?
+  totalBudget        Decimal       @db.Decimal(12, 2)
+  budgetSpent        Decimal       @default(0) @db.Decimal(12, 2)
+  currency           Currency      @default(USD)
+  progressPercentage Float         @default(0)
+  coverImageUrl      String?
+  latitude           Float?
+  longitude          Float?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  // Relations
+  client         User           @relation("ClientProjects", fields: [clientId], references: [id])
+  projectManager User?          @relation("ManagedProjects", fields: [projectManagerId], references: [id])
+  villaTemplate  VillaTemplate? @relation(fields: [villaTemplateId], references: [id])
+  phases         ProjectPhase[]
+  tasks          Task[]
+  milestones     Milestone[]
+  payments       Payment[]
+  media          Media[]
+  issues         Issue[]
+  messages       Message[]
+  devices        SmartDevice[]
+  weatherData    WeatherData[]
+  dailyReports   DailyReport[]
+  activities     Activity[]
+
+  @@index([clientId])
+  @@index([projectManagerId])
+  @@index([status])
+  @@map("projects")
+}
+
+model ProjectPhase {
+  id                 String      @id @default(uuid())
+  projectId          String
+  name               String
+  description        String?
+  orderIndex         Int
+  status             PhaseStatus @default(NOT_STARTED)
+  startDate          DateTime?
+  endDate            DateTime?
+  progressPercentage Float       @default(0)
+  budgetAllocated    Decimal     @default(0) @db.Decimal(12, 2)
+  budgetSpent        Decimal     @default(0) @db.Decimal(12, 2)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks      Task[]
+  milestones Milestone[]
+  media      Media[]
+  issues     Issue[]
+
+  @@unique([projectId, orderIndex])
+  @@index([projectId])
+  @@map("project_phases")
+}
+
+model Task {
+  id             String       @id @default(uuid())
+  projectId      String
+  phaseId        String?
+  parentTaskId   String?
+  title          String
+  description    String?
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(MEDIUM)
+  assigneeId     String?
+  dueDate        DateTime?
+  completedAt    DateTime?
+  estimatedHours Float?
+  actualHours    Float?
+  orderIndex     Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase      ProjectPhase? @relation(fields: [phaseId], references: [id])
+  parentTask Task?         @relation("SubTasks", fields: [parentTaskId], references: [id])
+  subTasks   Task[]        @relation("SubTasks")
+  assignee   User?         @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  media      Media[]
+  issues     Issue[]
+
+  @@index([projectId])
+  @@index([phaseId])
+  @@index([assigneeId])
+  @@index([status])
+  @@map("tasks")
+}
+
+model Milestone {
+  id             String    @id @default(uuid())
+  projectId      String
+  phaseId        String?
+  name           String
+  description    String?
+  targetDate     DateTime
+  completedDate  DateTime?
+  isCompleted    Boolean   @default(false)
+  paymentTrigger Boolean   @default(false)
+  paymentAmount  Decimal?  @db.Decimal(12, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  project  Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase    ProjectPhase? @relation(fields: [phaseId], references: [id])
+  payments Payment[]
+
+  @@index([projectId])
+  @@index([targetDate])
+  @@map("milestones")
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  projectId      String
+  milestoneId    String?
+  invoiceNumber  String        @unique
+  amount         Decimal       @db.Decimal(12, 2)
+  currency       Currency      @default(USD)
+  status         PaymentStatus @default(PENDING)
+  method         PaymentMethod?
+  dueDate        DateTime
+  paidAt         DateTime?
+  description    String?
+  receiptUrl     String?
+  transactionRef String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone Milestone? @relation(fields: [milestoneId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("payments")
+}
+
+model Media {
+  id           String    @id @default(uuid())
+  projectId    String
+  phaseId      String?
+  taskId       String?
+  uploadedById String
+  type         MediaType
+  fileName     String
+  fileUrl      String
+  thumbnailUrl String?
+  fileSize     Int
+  mimeType     String
+  caption      String?
+  metadata     Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase      ProjectPhase? @relation(fields: [phaseId], references: [id])
+  task       Task?         @relation(fields: [taskId], references: [id])
+  uploadedBy User          @relation(fields: [uploadedById], references: [id])
+
+  @@index([projectId])
+  @@index([type])
+  @@map("media")
+}
+
+model Issue {
+  id           String        @id @default(uuid())
+  projectId    String
+  phaseId      String?
+  taskId       String?
+  reportedById String
+  assignedToId String?
+  title        String
+  description  String
+  type         IssueType
+  severity     IssueSeverity
+  status       IssueStatus   @default(OPEN)
+  resolvedAt   DateTime?
+  resolution   String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  project    Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase      ProjectPhase? @relation(fields: [phaseId], references: [id])
+  task       Task?         @relation(fields: [taskId], references: [id])
+  reportedBy User          @relation("ReportedIssues", fields: [reportedById], references: [id])
+  assignedTo User?         @relation("AssignedIssues", fields: [assignedToId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+  @@index([severity])
+  @@map("issues")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  actionUrl String?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model Message {
+  id              String   @id @default(uuid())
+  projectId       String
+  senderId        String
+  content         String
+  attachments     String[]
+  isSystemMessage Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sender  User    @relation(fields: [senderId], references: [id])
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model Contractor {
+  id          String              @id @default(uuid())
+  companyName String
+  contactName String
+  email       String              @unique
+  phone       String
+  specialty   ContractorSpecialty
+  rating      Float?
+  isVerified  Boolean             @default(false)
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@index([specialty])
+  @@map("contractors")
+}
+
+model SmartDevice {
+  id            String       @id @default(uuid())
+  projectId     String
+  name          String
+  type          DeviceType
+  manufacturer  String?
+  model         String?
+  serialNumber  String?
+  status        DeviceStatus @default(OFFLINE)
+  lastOnlineAt  DateTime?
+  configuration Json?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([type])
+  @@map("smart_devices")
+}
+
+model WeatherData {
+  id            String   @id @default(uuid())
+  projectId     String
+  recordedAt    DateTime
+  temperature   Float
+  humidity      Float
+  windSpeed     Float
+  precipitation Float
+  conditions    String
+  workSuitable  Boolean
+  createdAt     DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, recordedAt])
+  @@map("weather_data")
+}
+
+model DailyReport {
+  id                String   @id @default(uuid())
+  projectId         String
+  date              DateTime @db.Date
+  submittedById     String
+  workersOnSite     Int
+  workDescription   String
+  materialsUsed     String?
+  issues            String?
+  weatherConditions String
+  photoIds          String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  submittedBy User    @relation(fields: [submittedById], references: [id])
+
+  @@unique([projectId, date])
+  @@index([projectId])
+  @@map("daily_reports")
+}
+
+model Activity {
+  id          String   @id @default(uuid())
+  projectId   String
+  type        String
+  title       String
+  description String?
+  userId      String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("activities")
+}

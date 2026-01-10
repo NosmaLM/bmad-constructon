@@ -1,0 +1,2254 @@
+openapi: 3.0.3
+info:
+  title: Build Tracker API
+  description: |
+    REST API for Build Tracker - Construction project management platform for constructon.
+
+    ## Authentication
+    Most endpoints require JWT authentication. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <token>
+    ```
+
+    ## Rate Limiting
+    API requests are rate limited to 100 requests per 15 minutes per IP address.
+  version: 1.0.0
+  contact:
+    name: constructon Support
+    email: support@constructon.co.zw
+  license:
+    name: Proprietary
+    url: https://constructon.co.zw
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.constructon.co.zw/api/v1
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Users
+    description: User management operations
+  - name: Projects
+    description: Construction project management
+  - name: Phases
+    description: Project phase management
+  - name: Tasks
+    description: Task management within projects
+  - name: Milestones
+    description: Project milestone tracking
+  - name: Payments
+    description: Payment tracking and management
+  - name: Media
+    description: Photo and video uploads
+  - name: Issues
+    description: Issue reporting and tracking
+  - name: Messages
+    description: Project messaging
+  - name: Reports
+    description: Daily reports and summaries
+  - name: Contractors
+    description: Contractor management
+  - name: Notifications
+    description: User notifications
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Invalid request data
+
+    PaginatedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items: {}
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 100
+            totalPages:
+              type: integer
+              example: 5
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [ADMIN, PROJECT_MANAGER, SITE_SUPERVISOR, FIELD_WORKER, CLIENT]
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, PENDING, SUSPENDED]
+        avatarUrl:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@constructon.co.zw
+        password:
+          type: string
+          format: password
+          minLength: 8
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            expiresIn:
+              type: integer
+              example: 900
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        villaTemplate:
+          type: string
+        plotNumber:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+        startDate:
+          type: string
+          format: date
+        estimatedEndDate:
+          type: string
+          format: date
+        actualEndDate:
+          type: string
+          format: date
+          nullable: true
+        budget:
+          type: number
+        amountPaid:
+          type: number
+        progressPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateProjectRequest:
+      type: object
+      required:
+        - name
+        - villaTemplate
+        - plotNumber
+        - address
+        - city
+        - startDate
+        - estimatedEndDate
+        - budget
+        - clientId
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        villaTemplate:
+          type: string
+        plotNumber:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+        startDate:
+          type: string
+          format: date
+        estimatedEndDate:
+          type: string
+          format: date
+        budget:
+          type: number
+        clientId:
+          type: string
+          format: uuid
+        managerId:
+          type: string
+          format: uuid
+        supervisorId:
+          type: string
+          format: uuid
+
+    Phase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        order:
+          type: integer
+        status:
+          type: string
+          enum: [NOT_STARTED, IN_PROGRESS, COMPLETED, ON_HOLD]
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        actualStartDate:
+          type: string
+          format: date
+          nullable: true
+        actualEndDate:
+          type: string
+          format: date
+          nullable: true
+        progressPercentage:
+          type: number
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        phaseId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, IN_REVIEW, COMPLETED, BLOCKED]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: string
+          format: date
+        estimatedHours:
+          type: number
+        actualHours:
+          type: number
+          nullable: true
+        assigneeId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - phaseId
+        - title
+      properties:
+        phaseId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: string
+          format: date
+        estimatedHours:
+          type: number
+        assigneeId:
+          type: string
+          format: uuid
+
+    Milestone:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        dueDate:
+          type: string
+          format: date
+        completedDate:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          enum: [PENDING, COMPLETED, OVERDUE]
+        paymentRequired:
+          type: boolean
+        paymentAmount:
+          type: number
+          nullable: true
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        milestoneId:
+          type: string
+          format: uuid
+          nullable: true
+        amount:
+          type: number
+        currency:
+          type: string
+          default: USD
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED]
+        method:
+          type: string
+          enum: [BANK_TRANSFER, MOBILE_MONEY, CASH, CARD]
+        reference:
+          type: string
+        notes:
+          type: string
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Media:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [PHOTO, VIDEO, DOCUMENT, DRONE_FOOTAGE, TIMELAPSE]
+        url:
+          type: string
+        thumbnailUrl:
+          type: string
+          nullable: true
+        caption:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        gpsLatitude:
+          type: number
+          nullable: true
+        gpsLongitude:
+          type: number
+          nullable: true
+        uploadedBy:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+
+    UploadUrlResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            uploadUrl:
+              type: string
+            mediaId:
+              type: string
+            expiresAt:
+              type: string
+              format: date-time
+
+    Issue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [SAFETY, QUALITY, DELAY, MATERIAL, WEATHER, OTHER]
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+        reportedBy:
+          $ref: '#/components/schemas/User'
+        assignedTo:
+          $ref: '#/components/schemas/User'
+        resolvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        senderId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        type:
+          type: string
+          enum: [TEXT, IMAGE, FILE, SYSTEM]
+        readBy:
+          type: array
+          items:
+            type: string
+            format: uuid
+        createdAt:
+          type: string
+          format: date-time
+
+    DailyReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        weather:
+          type: string
+        temperature:
+          type: number
+        workersPresent:
+          type: integer
+        workHours:
+          type: number
+        activitiesCompleted:
+          type: array
+          items:
+            type: string
+        materialsUsed:
+          type: array
+          items:
+            type: object
+        issues:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+        submittedBy:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+
+    Contractor:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        specialty:
+          type: string
+          enum: [GENERAL, ELECTRICAL, PLUMBING, HVAC, ROOFING, PAINTING, FLOORING, LANDSCAPING, SOLAR, SMART_HOME]
+        rating:
+          type: number
+          minimum: 0
+          maximum: 5
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, BLACKLISTED]
+        createdAt:
+          type: string
+          format: date-time
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [MILESTONE_COMPLETE, PAYMENT_DUE, PAYMENT_RECEIVED, NEW_PHOTO, NEW_MESSAGE, ISSUE_REPORTED, ISSUE_RESOLVED, DAILY_REPORT, WEATHER_ALERT, TASK_ASSIGNED, TASK_COMPLETED]
+        title:
+          type: string
+        body:
+          type: string
+        data:
+          type: object
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+  responses:
+    Unauthorized:
+      description: Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: UNAUTHORIZED
+              message: Invalid or expired token
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: FORBIDDEN
+              message: You do not have permission to perform this action
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: NOT_FOUND
+              message: Resource not found
+
+    ValidationError:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: VALIDATION_ERROR
+              message: Invalid request data
+              details:
+                - field: email
+                  message: Invalid email format
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Authentication
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                      expiresIn:
+                        type: integer
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Logout and invalidate tokens
+      responses:
+        '200':
+          description: Logged out successfully
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Current user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /auth/change-password:
+    post:
+      tags: [Authentication]
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - currentPassword
+                - newPassword
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password changed successfully
+
+  /auth/forgot-password:
+    post:
+      tags: [Authentication]
+      summary: Request password reset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Password reset email sent
+
+  /auth/reset-password:
+    post:
+      tags: [Authentication]
+      summary: Reset password with token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - password
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password reset successful
+
+  # Users
+  /users:
+    get:
+      tags: [Users]
+      summary: List all users (admin only)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [ADMIN, PROJECT_MANAGER, SITE_SUPERVISOR, FIELD_WORKER, CLIENT]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [ACTIVE, INACTIVE, PENDING, SUSPENDED]
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Users]
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phone:
+                  type: string
+                role:
+                  type: string
+                  enum: [ADMIN, PROJECT_MANAGER, SITE_SUPERVISOR, FIELD_WORKER, CLIENT]
+                status:
+                  type: string
+                  enum: [ACTIVE, INACTIVE, PENDING, SUSPENDED]
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  # Projects
+  /projects:
+    get:
+      tags: [Projects]
+      summary: List projects
+      description: Returns projects based on user role. Admins see all, clients see their own projects.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+
+    post:
+      tags: [Projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Project'
+
+  /projects/{id}:
+    get:
+      tags: [Projects]
+      summary: Get project details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Project details with phases, milestones, and team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Project'
+                      - type: object
+                        properties:
+                          phases:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Phase'
+                          milestones:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Milestone'
+                          client:
+                            $ref: '#/components/schemas/User'
+                          manager:
+                            $ref: '#/components/schemas/User'
+
+    patch:
+      tags: [Projects]
+      summary: Update project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                  enum: [PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+                estimatedEndDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Project updated
+
+    delete:
+      tags: [Projects]
+      summary: Delete project (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Project deleted
+
+  # Phases
+  /projects/{projectId}/phases:
+    get:
+      tags: [Phases]
+      summary: List project phases
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of phases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Phase'
+
+    post:
+      tags: [Phases]
+      summary: Create a new phase
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - order
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                order:
+                  type: integer
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Phase created
+
+  /projects/{projectId}/phases/{phaseId}:
+    patch:
+      tags: [Phases]
+      summary: Update phase
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: phaseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                  enum: [NOT_STARTED, IN_PROGRESS, COMPLETED, ON_HOLD]
+                progressPercentage:
+                  type: number
+      responses:
+        '200':
+          description: Phase updated
+
+  # Tasks
+  /projects/{projectId}/tasks:
+    get:
+      tags: [Tasks]
+      summary: List project tasks
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: phaseId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [TODO, IN_PROGRESS, IN_REVIEW, COMPLETED, BLOCKED]
+        - name: assigneeId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+
+    post:
+      tags: [Tasks]
+      summary: Create a new task
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created
+
+  /projects/{projectId}/tasks/{taskId}:
+    get:
+      tags: [Tasks]
+      summary: Get task details
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task details
+
+    patch:
+      tags: [Tasks]
+      summary: Update task
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                status:
+                  type: string
+                  enum: [TODO, IN_PROGRESS, IN_REVIEW, COMPLETED, BLOCKED]
+                priority:
+                  type: string
+                  enum: [LOW, MEDIUM, HIGH, URGENT]
+                assigneeId:
+                  type: string
+                  format: uuid
+                actualHours:
+                  type: number
+      responses:
+        '200':
+          description: Task updated
+
+    delete:
+      tags: [Tasks]
+      summary: Delete task
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task deleted
+
+  # Milestones
+  /projects/{projectId}/milestones:
+    get:
+      tags: [Milestones]
+      summary: List project milestones
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of milestones
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Milestone'
+
+    post:
+      tags: [Milestones]
+      summary: Create a milestone
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - dueDate
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date
+                paymentRequired:
+                  type: boolean
+                paymentAmount:
+                  type: number
+      responses:
+        '201':
+          description: Milestone created
+
+  /projects/{projectId}/milestones/{milestoneId}:
+    patch:
+      tags: [Milestones]
+      summary: Update milestone
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: milestoneId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, COMPLETED, OVERDUE]
+                completedDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Milestone updated
+
+  # Payments
+  /projects/{projectId}/payments:
+    get:
+      tags: [Payments]
+      summary: List project payments
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+
+    post:
+      tags: [Payments]
+      summary: Record a payment
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - method
+              properties:
+                amount:
+                  type: number
+                method:
+                  type: string
+                  enum: [BANK_TRANSFER, MOBILE_MONEY, CASH, CARD]
+                milestoneId:
+                  type: string
+                  format: uuid
+                reference:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Payment recorded
+
+  /projects/{projectId}/payments/{paymentId}:
+    patch:
+      tags: [Payments]
+      summary: Update payment status
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED]
+      responses:
+        '200':
+          description: Payment updated
+
+  # Media
+  /projects/{projectId}/media:
+    get:
+      tags: [Media]
+      summary: List project media
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [PHOTO, VIDEO, DOCUMENT, DRONE_FOOTAGE, TIMELAPSE]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of media
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Media'
+
+  /projects/{projectId}/media/upload-url:
+    post:
+      tags: [Media]
+      summary: Get presigned upload URL
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - filename
+                - contentType
+                - type
+              properties:
+                filename:
+                  type: string
+                contentType:
+                  type: string
+                  example: image/jpeg
+                type:
+                  type: string
+                  enum: [PHOTO, VIDEO, DOCUMENT, DRONE_FOOTAGE, TIMELAPSE]
+      responses:
+        '200':
+          description: Upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadUrlResponse'
+
+  /projects/{projectId}/media/{mediaId}:
+    patch:
+      tags: [Media]
+      summary: Update media metadata
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Media updated
+
+    delete:
+      tags: [Media]
+      summary: Delete media
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: mediaId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Media deleted
+
+  # Issues
+  /projects/{projectId}/issues:
+    get:
+      tags: [Issues]
+      summary: List project issues
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [LOW, MEDIUM, HIGH, CRITICAL]
+      responses:
+        '200':
+          description: List of issues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+
+    post:
+      tags: [Issues]
+      summary: Report an issue
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - category
+                - severity
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                  enum: [SAFETY, QUALITY, DELAY, MATERIAL, WEATHER, OTHER]
+                severity:
+                  type: string
+                  enum: [LOW, MEDIUM, HIGH, CRITICAL]
+                assignedToId:
+                  type: string
+                  format: uuid
+      responses:
+        '201':
+          description: Issue created
+
+  /projects/{projectId}/issues/{issueId}:
+    patch:
+      tags: [Issues]
+      summary: Update issue
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: issueId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+                assignedToId:
+                  type: string
+                  format: uuid
+                resolution:
+                  type: string
+      responses:
+        '200':
+          description: Issue updated
+
+  # Messages
+  /projects/{projectId}/messages:
+    get:
+      tags: [Messages]
+      summary: Get project messages
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: before
+          in: query
+          description: Get messages before this timestamp
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+
+    post:
+      tags: [Messages]
+      summary: Send a message
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                type:
+                  type: string
+                  enum: [TEXT, IMAGE, FILE]
+                  default: TEXT
+      responses:
+        '201':
+          description: Message sent
+
+  /projects/{projectId}/messages/read:
+    post:
+      tags: [Messages]
+      summary: Mark messages as read
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - messageIds
+              properties:
+                messageIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: Messages marked as read
+
+  # Daily Reports
+  /projects/{projectId}/reports:
+    get:
+      tags: [Reports]
+      summary: List daily reports
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of daily reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DailyReport'
+
+    post:
+      tags: [Reports]
+      summary: Submit daily report
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - date
+                - workersPresent
+                - workHours
+              properties:
+                date:
+                  type: string
+                  format: date
+                weather:
+                  type: string
+                temperature:
+                  type: number
+                workersPresent:
+                  type: integer
+                workHours:
+                  type: number
+                activitiesCompleted:
+                  type: array
+                  items:
+                    type: string
+                materialsUsed:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: number
+                      unit:
+                        type: string
+                issues:
+                  type: array
+                  items:
+                    type: string
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Report submitted
+
+  /projects/{projectId}/reports/{reportId}:
+    get:
+      tags: [Reports]
+      summary: Get daily report details
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Report details
+
+  # Contractors
+  /contractors:
+    get:
+      tags: [Contractors]
+      summary: List contractors
+      parameters:
+        - name: specialty
+          in: query
+          schema:
+            type: string
+            enum: [GENERAL, ELECTRICAL, PLUMBING, HVAC, ROOFING, PAINTING, FLOORING, LANDSCAPING, SOLAR, SMART_HOME]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [ACTIVE, INACTIVE, BLACKLISTED]
+      responses:
+        '200':
+          description: List of contractors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Contractor'
+
+    post:
+      tags: [Contractors]
+      summary: Add a contractor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - phone
+                - specialty
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                specialty:
+                  type: string
+                  enum: [GENERAL, ELECTRICAL, PLUMBING, HVAC, ROOFING, PAINTING, FLOORING, LANDSCAPING, SOLAR, SMART_HOME]
+      responses:
+        '201':
+          description: Contractor added
+
+  /contractors/{id}:
+    get:
+      tags: [Contractors]
+      summary: Get contractor details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Contractor details
+
+    patch:
+      tags: [Contractors]
+      summary: Update contractor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                rating:
+                  type: number
+                status:
+                  type: string
+                  enum: [ACTIVE, INACTIVE, BLACKLISTED]
+      responses:
+        '200':
+          description: Contractor updated
+
+  # Notifications
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: Get user notifications
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  unreadCount:
+                    type: integer
+
+  /notifications/read:
+    post:
+      tags: [Notifications]
+      summary: Mark notifications as read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notificationIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                all:
+                  type: boolean
+                  description: Mark all notifications as read
+      responses:
+        '200':
+          description: Notifications marked as read
+
+  /notifications/settings:
+    get:
+      tags: [Notifications]
+      summary: Get notification settings
+      responses:
+        '200':
+          description: Notification settings
+
+    patch:
+      tags: [Notifications]
+      summary: Update notification settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: boolean
+                push:
+                  type: boolean
+                sms:
+                  type: boolean
+                categories:
+                  type: object
+                  additionalProperties:
+                    type: boolean
+      responses:
+        '200':
+          description: Settings updated
+
+  # Health check
+  /health:
+    get:
+      tags: [System]
+      summary: Health check endpoint
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
