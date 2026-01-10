@@ -125,6 +125,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared package
+        run: pnpm --filter @build-tracker/shared build
+
       - name: Run unit tests with coverage
         run: pnpm --filter @build-tracker/api test:coverage
         env:
@@ -194,6 +197,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @build-tracker/shared build
 
       - name: Generate Prisma Client
         run: pnpm --filter @build-tracker/api db:generate
