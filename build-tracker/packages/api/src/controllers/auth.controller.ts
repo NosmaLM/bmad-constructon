@@ -342,7 +342,7 @@ export class AuthController {
     const accessToken = jwt.sign(
       { userId, email, role },
       config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      { expiresIn: config.jwt.expiresIn as string }
     );
 
     const refreshToken = uuidv4();

@@ -2,7 +2,7 @@
  * Test Setup - Global configuration for all tests
  */
 
-import { vi } from 'vitest';
+import { vi, beforeEach } from 'vitest';
 
 // Mock @build-tracker/shared package
 vi.mock('@build-tracker/shared', () => ({
