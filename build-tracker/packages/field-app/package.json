@@ -9,8 +9,8 @@
     "ios": "expo run:ios",
     "build:android": "eas build --platform android",
     "build:ios": "eas build --platform ios",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "lint": "eslint app --ext .ts,.tsx",
+    "lint:fix": "eslint app --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
