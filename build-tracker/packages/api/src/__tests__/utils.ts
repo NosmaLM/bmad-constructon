@@ -198,7 +198,7 @@ export function createMockAuthRequest(
     user: {
       id: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role as any,
       firstName: user.firstName || 'Test',
       lastName: user.lastName || 'User',
     },
